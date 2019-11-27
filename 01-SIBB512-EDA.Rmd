@@ -1,0 +1,222 @@
+---
+title: "Exploratory Data Analysis"
+output: 
+  html_notebook: 
+    toc: yes
+---
+
+# Overview
+
+The content of this markdown notebook was adopted from [R for Data Science](https://r4ds.had.co.nz/index.html) book by Hadley Wickham. The book is available online for free. 
+
+We will learn how to to filter, arrange, summarise, mutate and visualize your data with dplyr and ggplot2 using the Titanic data!
+
+```{r}
+# install.packages("tidyverse")
+library(tidyverse)
+```
+
+# EDA in Brief
+
+**GOAL** Try to find variation and covariation within the dataset. 
+
+What measrement/statistics can you use to measure variation and covariation among the variables within the dataset?
+
+## The *Diamond* dataset.
+To get information about a specific dataset included with R packages. For example, the *diamonds* dataset included with **ggplot2** package. Try the following command.
+```{r}
+?diamonds
+```
+### What information is given by the variable `cut`?
+
+### Visualizing Variation
+
+#### How do you visualize the variation in the diamond data as described by _cut_?
+```{r}
+ggplot(data = diamonds) +
+  geom_bar(mapping = aes(x = cut))
+```
+
+### How do you interpret the graph above?
+
+### Can you give the exact count by cut and display the result in a table?
+```{r}
+diamonds %>% count(cut)
+```
+
+#### Can you show the variation by carat?
+```{r}
+ggplot(data = diamonds) +
+  geom_histogram(mapping = aes(x = carat))
+```
+### histogram binwidth
+How does the binwidth affect the shape of the data? Try vary the binwidth to "1" and "0.1" (Hint: `?geom_histogram`)
+What binwidth gives us more detail on the variation in the diamond size?
+
+## Typical values?
+
+Which diamond sizes are the most common? Can you guess why?
+
+## Unusual values?
+
+Is there an unusually small diamond within the diamond data set?
+
+### How do you visualize these outliers?
+Name 2 type of graphs that can help us achieve this goal.
+1. 
+2. 
+
+How do you create the above two plots?
+
+# Titanic Data
+
+Get the data from [here](https://www.kaggle.com/c/titanic)
+- `train.csv`: Data for model training
+- `test.csv`: Data for model testing
+- `gender_submission.csv`: result submission for Kaggle competition
+
+## Import Train Data
+```{r}
+passengers <- read.csv("train.csv")
+```
+
+View the data by either clicking on the Data name on the panel. or Use the command `View(passengers)` or `head(passengers)`. 
+Let's look at the data!
+
+```{r}
+head(passengers)
+```
+
+## General summary of the data
+```{r}
+summary(passengers)
+```
+
+With the `tidyverse` package you can pipe your data to a command. For example, to summarize the `passengers` data. You can pipe it with `%>%` to the function `summary()`.
+```{r tidy_summary}
+passengers %>% 
+  summary()
+```
+
+You can combine pipe. 
+For example, removing any records with `NA` first, then summarize the data. 
+```{r}
+passengers %>% 
+  drop_na() %>%
+  summary()
+```
+You can see that the male:female changed from 577:314 to 453:261. 
+
+## Filter
+
+Choose specfic rows based on specific criteria. 
+```{r}
+passengers %>%
+  filter(Sex == "male") 
+```
+
+## Arrange the data
+
+Try to order the data by Fare. In this example, to put the most expensive at the top, we can use `desc()`. 
+```{r}
+passengers %>% 
+  arrange(desc(Fare))
+```
+
+## Create new variable
+
+`mutate()` the old dataset to include a new variable `famsize`. You know that the variable `Parch` is the number of parents and children while `SibSp` is the number of siblings and spouses. You can add these together to get a new variable `FamSize`.
+```{r}
+passengers %>%
+  mutate(FamSize = Parch + SibSp)
+```
+
+## Convert variable from number to text
+Turn numerical values of Survived column to "No" & "Yes" (new data frame)
+```{r}
+passengers1 <- passengers %>%
+  mutate(Survived = ifelse(Survived == 0, "No", "Yes"))
+```
+
+## Plotting your data
+
+### bar plot
+```{r}
+ggplot(passengers , aes(x = Sex)) + 
+  geom_bar()
+```
+
+What's your interpretation of the graph?
+
+### Scatter Plot
+
+Try looking for relationship between `Fare` and `Age`. We will try to make a point first.
+```{r}
+ggplot(passengers %>% drop_na(), aes( x = Age, y = Fare)) +
+  geom_point()
+```
+
+### Adding color to the plot
+
+We can add additional insight to the graph by providing color. 
+```{r}
+ggplot(passengers %>% drop_na(), aes( x = Age, y = Fare, color = Sex)) +
+  geom_point()
+```
+
+### Adding Facet to the Data
+
+What about `Fare`, `Age` and `Sex` impact on `Survival`?
+```{r}
+ggplot(passengers1 %>% drop_na(), aes(x = Age, y = Fare, color = Sex)) +
+  geom_point() +
+  facet_grid(~Survived)
+```
+
+### More meaning bar plot
+Giving info on sex and survival. But with bar plot, we use `fill` option to fill in color by categorical variable instead of using `color` to fill each data point.
+```{r}
+ggplot(passengers1, aes(x = Sex, fill = Survived)) +
+  geom_bar()
+```
+
+## Summarizing and Grouping Data
+
+### summarise
+Finally, to calculate some aggregate statistics from the data, we can use `summarise()`.
+```{r}
+passengers %>%
+  summarise(MeanFare = mean(Fare))
+```
+
+Can you calculate the median fare?
+
+What about the meadian fare that male passengers had to pay? 
+```{r}
+passengers %>%
+  filter(Sex == "male") %>%
+  summarise(MeanFare_male = mean(Fare))
+```
+What about the meadian fare that female passengers had to pay? 
+
+How to find out the total number of female that survived together with the `MeanFare`?
+```{r}
+passengers %>% 
+  filter(Sex == "female") %>%
+  summarise(MeanFare = mean(Fare), NumSuv = sum(Survived))
+```
+
+### group_by
+Instead of calculating the median fare twice for male and female, we can use `group_by()`
+```{r}
+passengers %>% 
+  group_by(Sex) %>%
+  summarise(MedianFare = median(Fare))
+```
+
+### sum
+```{r}
+passengers %>% 
+  group_by(Sex) %>%
+  summarise(MedianFare = median(Fare), NumSurv = sum(Survived))
+```

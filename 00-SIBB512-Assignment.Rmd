@@ -1,0 +1,139 @@
+---
+title: "SIBB512: Assignment"
+author: "Bhoom Suktitipat"
+date: "Nov/28/2019"
+output: 
+  html_document: 
+    toc: yes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+```
+## Instruction
+
+1. Read through this assignment and fill in the code chunks for the answers.
+2. Modify the author name and `knit` the file to create your answer.
+3. Save the result knitted file using the following format "SIBB512-FirstName-Lastname.html"
+4. Send it to bhoom.suk@mahidol.edu with the subject line "SIBB512 R Assignment"
+
+## Import Data
+
+Border crossing entry data from [Kaggle](https://www.kaggle.com/akhilv11/border-crossing-entry-dataBorder_Crossing_Entry_Data) has been saved to the current workspace. You can find the file in the File Panel on the lower right part of the screen. 
+
+To import the dataset, you can use the GUI menu at the upper right panel, *click* "Import Dataset". I preferably recommend using _"From text (readr)"_ as the package came with several automate import help.
+
+Please follow the import dialog box, change the type of delimitter if the data preview does not look correct. 
+
+Use the "History" Panel to copy the code used to import data into this file.
+
+```{r border_data}
+require(readr)
+Border_Crossing_Entry_Data <- readr::read_csv("Border_Crossing_Entry_Data.csv")
+```
+
+After importing the data, you should be able to see the *Data* named `Border_Crossing_Entry_Data` in the Environment panel (upper right corner).
+
+This is a table similar to a spread sheet in Excel. In R, this is a common format convenient for data analysis called "Data Frame".
+
+Can you change the name of the data to `border_data`?
+[Hint: Try to re-import the data, but change the `Name` in the import option dialog box to `border_data`]
+
+## Getting to know your data
+
+How may columns are there? [Try click on the data to preview it.]
+[Hint: Insert code chuck and try ncol() and names() function] What's the difference between the two function?
+```{r ncol}
+border_data <- Border_Crossing_Entry_Data
+ncol(border_data)
+```
+
+```{r names}
+names(border_data)
+```
+
+How many observations are there?
+[Hint: nrow() and dim()]
+```{r dimension}
+border_data %>%
+  nrow()
+```
+
+```{r dim_dimension}
+dim(border_data)
+```
+
+Can you guess what type of info the column name "Value" is telling us?
+
+How many mode of border crossing was recorded?
+
+## Subsetting data
+What was the most common method of border crossing from California?
+[Hint: Try `table(border_data$Measure)`]
+```{r ans01}
+
+```
+Can you get the same answer using `%>%` and `count()` in `tidyverse`?
+```{r ans02}
+
+```
+
+What's the benefit of piping? 
+- can you time the operation?
+```{r ans03}
+
+```
+
+### which?
+
+How many records are related to "California"?
+[Hint 1: ?subset]
+[Hint 2: ?which]
+
+
+```{r californian}
+californian <- subset(border_data, State == "California")
+# californian <- border_data[which(border_data$State=="California"), ]
+```
+
+Can you count the numbers of records related to each State within the data?
+[Hint: use `group_by()` and `count()` in tidyverse]
+```{r ans04}
+
+```
+
+### which & and
+How many people walk acorss the border from California in this data?
+```{r californian_walker}
+californian_walker <- californian[which(californian$Measure=="Pedestrians"),]
+```
+You can get the summation of the *Value* using `sum(californian_walker$Value)` or use Pipe operation. Pipe calculate the same answer without the need to save an intermediate data frame in the memory.
+```{r ans05}
+
+```
+
+## Count by category
+
+Try help function `?tapply` 
+```{r crosser_count}
+californian_crossers <- tapply(californian$Value, californian$Measure, sum)
+californian_crossers
+```
+Can you use `group_by()` to get similar answer?
+```{r ans06}
+californian %>% 
+  group_by(Measure) %>% 
+  summarise(Number=sum(Value)) %>% 
+  arrange(desc(Number))
+```
+
+What is the most common *Port* for Californian to cross the border?
+```{r ans06}
+
+```
+
+Can you create a plot to represent the mode and number of border crossing for Californian?
+```{r ans07}
+
+```
