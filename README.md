@@ -31,3 +31,8 @@ In this class, students will be introduced to the basic concept of exploratory d
 1. Tufte E. Envisioning Information. Cheshire, CT, USA: Graphics Press; 1990. (Chapter 1)
 2. Tresukosol D, Suktitipat B, Hunnangkul S, Kamkaew R, Poldee S, Tassaneetrithep B, Likidlilid A.Effects of cytochrome P450 2C19 and paraoxonase 1 polymorphisms on antiplatelet response to clopidogrel therapy in patients with coronary artery disease. PLoS One. 2014 Oct 16;9(10):e110188. doi:10.1371/journal.pone.0110188. eCollection 2014. PMID: 25329996
 3. Wickham H. ggplot2: Elegant Graphics for Data Analysis. 1st ed. 2009. Corr. 3rd printing 2010 edition. Springer; 2010. 213 p.
+
+## Reference for the Data
+
+4. Akhil. Kaggle: Border Crossing Entry Data. Available at https://www.kaggle.com/akhilv11/border-crossing-entry-data
+5. Kaggle. Kaggle: Titanic: Machine Learning from Disaster. Available at https://www.kaggle.com/c/titanic
