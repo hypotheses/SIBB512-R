@@ -14,13 +14,17 @@ In this class, students will be introduced to the basic concept of exploratory d
 
 ## Learning Experience
 - Introduce to the concept of exploratory data analysis (30 minutes)
+    - [Handout](02-Handout-EDA.pdf)
 - Review the basic graphs and statistical measures (30 minutes)
+    - [Handout](02-Handout-EDA.pdf)
 - Introduction to basic R statistical language (60 minutes)
+    - [Handout 2](02-Handout-R_Intro.pdf)
 - Practical examples of exploratory data analysis and data visualization (60 minutes)
-
+    - Visit [RStudio Cloud](https://rstudio.cloud), log-in and clone this repository.
+    
 ## Course evaluation
 
-- Take-home assignment
+- Take-home assignment -- see [00-SIBB512-Assignment.Rmd](00-SIBB512-Assignment.Rmd)
 
 ## Reference
 
